@@ -10,6 +10,17 @@ app.use(cors());
 
 const repositories = [];
 
+const validateRepo = (response, id) => {
+  const repositoryIndex = repositories.findIndex((item) => item.id === id);
+
+  if (repositoryIndex < 0)
+    return response.status(400).json({ error: "Repository not found." });
+
+  const repositoryFind = repositories.find((item) => item.id === id);
+
+  return { repositoryIndex, repositoryFind };
+};
+
 app.get("/repositories", (request, response) => {
   return response.json(repositories);
 });
@@ -35,12 +46,7 @@ app.put("/repositories/:id", (request, response) => {
     body: { title, techs },
   } = request;
 
-  const repositoryIndex = repositories.findIndex((item) => item.id === id);
-
-  if (repositoryIndex < 0)
-    return response.status(400).json({ error: "Repository not found." });
-
-  const repositoryFind = repositories.find((item) => item.id === id);
+  const { repositoryFind, repositoryIndex } = validateRepo(response, id);
 
   const repository = {
     id,
@@ -57,10 +63,7 @@ app.put("/repositories/:id", (request, response) => {
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
 
-  const repositoryIndex = repositories.findIndex((item) => item.id === id);
-
-  if (repositoryIndex < 0)
-    return response.status(400).json({ error: "Repository not found." });
+  const { repositoryIndex } = validateRepo(response, id);
 
   repositories.splice(repositoryIndex, 1);
 
@@ -70,12 +73,7 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
 
-  const repositoryIndex = repositories.findIndex((item) => item.id === id);
-
-  if (repositoryIndex < 0)
-    return response.status(400).json({ error: "Repository not found." });
-
-  const repositoryFind = repositories.find((item) => item.id === id);
+  const { repositoryIndex } = validateRepo(response, id);
 
   const repository = {
     ...repositoryFind,
