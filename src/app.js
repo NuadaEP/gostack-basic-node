@@ -73,7 +73,7 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
 
-  const { repositoryIndex } = validateRepo(response, id);
+  const { repositoryFind, repositoryIndex } = validateRepo(response, id);
 
   const repository = {
     ...repositoryFind,
