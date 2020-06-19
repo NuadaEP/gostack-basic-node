@@ -26,10 +26,11 @@ app.get("/repositories", (request, response) => {
 });
 
 app.post("/repositories", (request, response) => {
-  const { title, techs } = request.body;
+  const { title, techs, url } = request.body;
 
   const repository = {
     id: uuid(),
+    url,
     title,
     techs,
     likes: 0,
@@ -43,13 +44,14 @@ app.post("/repositories", (request, response) => {
 app.put("/repositories/:id", (request, response) => {
   const {
     params: { id },
-    body: { title, techs },
+    body: { title, techs, url },
   } = request;
 
   const { repositoryFind, repositoryIndex } = validateRepo(response, id);
 
   const repository = {
     id,
+    url,
     title,
     techs,
     likes: repositoryFind.likes,
